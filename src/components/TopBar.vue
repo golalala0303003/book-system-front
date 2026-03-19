@@ -22,12 +22,6 @@ function handleJmpPage(key) {
     console.log("跳转图书交流论坛")
   }
 }
-
-function testQuitLogin  () {
-  localStorage.removeItem('token')
-  window.location.reload();
-  //localStorage.clear()
-}
 </script>
 
 <template>
@@ -60,10 +54,6 @@ function testQuitLogin  () {
     </el-col>
 
     <el-col :span="12" class="function-bar">
-      <div class="test-quit">
-        <button @click="testQuitLogin">测试退出登录用</button>
-      </div>
-
       <div class="mini-message">这里是消息组件</div>
       <MiniUser class="mini-user"></MiniUser>
     </el-col>

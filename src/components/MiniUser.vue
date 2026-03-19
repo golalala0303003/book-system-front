@@ -2,25 +2,27 @@
 import { ref } from "vue";
 import {User} from '@element-plus/icons-vue'
 import {useRouter} from "vue-router";
-const router = useRouter();
+import {useUserStore} from "@/stores/user.js";
 
-const token = ref(localStorage.getItem("token"));
-const isLogin = ref(!!token.value);
+
+const router = useRouter();
+const userStore = useUserStore()
+import defaultAvatar from '@/assets/test-avatar.jpg'
 
 function goLogin() {
-  console.log("跳转登录界面")
-  localStorage.setItem('token', "thisisatesttoken")
   router.push({name: 'login'})
 }
+
 function goProfile() {
   console.log("跳转用户资料界面")
 }
+
 </script>
 
 <template>
   <div class="container">
     <!-- 未登录 -->
-    <div v-if="!isLogin" class="login-prompt">
+    <div v-if="!userStore.isLogin" class="login-prompt">
       <el-icon><User /></el-icon>
       未登录，请先
       <span class="login-link" @click="goLogin">[登录]</span>
@@ -28,9 +30,9 @@ function goProfile() {
 
     <!-- 已登录 -->
     <div v-else class="user-card" @click="goProfile">
-      <img src="@/assets/test-avatar.jpg" alt="头像" class="avatar" />
+      <img :src="userStore.userInfo.avatar || defaultAvatar" alt="头像" class="avatar" />
       <div class="user-info">
-        <div class="user-name">用户xxxxxxx 欢迎您</div>
+        <div class="user-name">{{userStore.userInfo.username}}</div>
         <div class="user-link">个人主页</div>
       </div>
     </div>

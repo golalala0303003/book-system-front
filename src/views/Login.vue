@@ -1,6 +1,12 @@
 <script setup>
 import { ref, reactive, computed } from "vue"
+import {ElMessage} from "element-plus";
+import request from "@/utils/request.js"
+import {useRouter} from "vue-router";
+import { useUserStore } from "@/stores/user"
 
+const userStore = useUserStore()
+const router = useRouter()
 const isLogin = ref(true)
 
 const form = reactive({
@@ -11,13 +17,54 @@ const form = reactive({
 
 function switchMode() {
   isLogin.value = !isLogin.value
+  form.username = ""
+  form.password = ""
+  form.confirmPassword = ""
 }
 
 function submit() {
+  if (!form.username || !form.password) {
+    ElMessage.warning("请填写用户名和密码")
+    return
+  }
+
   if (isLogin.value) {
-    console.log("login", form)
+    handleLogin()
   } else {
-    console.log("register", form)
+    handleRegister()
+  }
+}
+
+async function handleLogin() {
+  try {
+    const res = await request.post('/user/login', {
+      username: form.username,
+      password: form.password
+    })
+    ElMessage.success(res.message || "登录成功！")
+    userStore.setLoginData(res.data.access_token, {
+      id: res.data.id,
+      username: res.data.username,
+      avatar: res.data.avatar
+    })
+    // 跳转到首页
+    ElMessage.info("登录成功，即将跳转至首页")
+    await router.push('/')
+  } catch (error) {
+    console.log("登录流程终止", error)
+  }
+}
+
+async function handleRegister() {
+  try {
+    const res = await request.post('/user/register', {
+      username: form.username,
+      password: form.password
+    })
+    ElMessage.success(res.message || "注册成功！")
+    switchMode()
+  } catch (error) {
+    console.log("注册流程终止", error)
   }
 }
 </script>

@@ -6,7 +6,7 @@ const router = useRouter()
 
 <template>
   <div class="layout">
-    <TopBar class="topbar">this place suppose to be a top bar</TopBar>
+    <TopBar class="topbar"></TopBar>
     <div class="body">
       <router-view></router-view>
     </div>

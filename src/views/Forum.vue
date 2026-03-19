@@ -3,7 +3,7 @@
 </script>
 
 <template>
- <div>hello, 这里是用户中心</div>
+
 </template>
 
 <style scoped>
