@@ -5,6 +5,8 @@ import Login from "@/views/Login.vue";
 import UserProfile from "@/views/UserProfile.vue";
 import Forum from "@/views/Forum.vue";
 import {ElMessage} from "element-plus";
+import {useUserStore} from "@/stores/user.js";
+
 
 const routes = [
     {
@@ -46,7 +48,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const token = localStorage.getItem('access_token')
+    const userStore = useUserStore()
+    const token = userStore.token
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (token) {
             next()
