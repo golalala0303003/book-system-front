@@ -1,5 +1,5 @@
 <script setup>
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 import TopBar from "@/components/TopBar.vue";
 const router = useRouter()
 </script>
@@ -15,18 +15,13 @@ const router = useRouter()
 
 <style scoped>
 .layout {
-  height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-.topbar {
-  height: 7vh;
-  width: 100%;
+  background: #5e5e5e;
 }
 
 .body {
   flex: 1;
-  background: #5e5e5e;
+  min-height: 200vh;
 }
 </style>

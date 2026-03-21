@@ -14,7 +14,10 @@ function goLogin() {
 }
 
 function goProfile() {
-  console.log("跳转用户资料界面")
+  router.push({
+    name: 'profile',
+    params: {id: userStore.userInfo.id}
+  })
 }
 
 </script>

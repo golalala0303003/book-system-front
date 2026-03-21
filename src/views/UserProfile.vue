@@ -1,9 +1,19 @@
 <script setup>
+import {useUserStore} from "@/stores/user.js";
+const userStore = useUserStore()
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 </script>
 
 <template>
- <div>hello, 这里是用户中心</div>
+  <div>{{route.params.id}}</div>
+  <div>{{route.params.id}}</div>
+  <div>{{route.params.id}}</div>
+  <div>{{route.params.id}}</div>
+  <div>{{route.params.id}}</div>
+
+
 </template>
 
 <style scoped>
