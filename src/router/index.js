@@ -6,6 +6,7 @@ import UserProfile from "@/views/UserProfile.vue";
 import Forum from "@/views/Forum.vue";
 import {ElMessage} from "element-plus";
 import {useUserStore} from "@/stores/user.js";
+import EditProfile from "@/views/EditProfile.vue";
 
 
 const routes = [
@@ -30,6 +31,12 @@ const routes = [
                 path: 'profile/:id',
                 name: 'profile',
                 component: UserProfile,
+                meta: { requiresAuth: true },
+            },
+            {
+                path: '/profile/edit',
+                name: 'profileEdit',
+                component: EditProfile,
                 meta: { requiresAuth: true },
             }
         ]
