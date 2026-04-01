@@ -17,7 +17,8 @@ const router = useRouter()
 .layout {
   display: flex;
   flex-direction: column;
-  background: #5e5e5e;
+  background: var(--book-bg-color);
+  color: var(--book-text-color);
 }
 
 .body {

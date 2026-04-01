@@ -78,10 +78,10 @@ watch(() => route.params.id, (newId) => {
 .back-btn {
   margin-bottom: 20px;
   font-size: 16px;
-  color: #ffffff;
+  color: var(--book-text-color);
 }
 .back-btn:hover {
-  color: #409EFF;
+  color: var(--book-link-color);
 }
 .mb-20 {
   margin-bottom: 20px; /* 给卡片下方留点空隙 */

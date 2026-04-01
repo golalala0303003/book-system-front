@@ -191,20 +191,86 @@ const submitUpdate = async () => {
   margin: 0 auto;
   padding: 20px;
 }
-.header { margin-bottom: 20px; }
-.back-btn { font-size: 16px; color: #ffffff; }
-.back-btn:hover { color: #409EFF; }
-.card-header { font-weight: bold; font-size: 18px; }
-.form-layout { display: flex; justify-content: space-between; gap: 60px; padding: 20px 0; }
-.left-form { flex: 1; max-width: 500px; }
-.save-btn { width: 120px; }
-.custom-input :deep(.el-input__wrapper) { background-color: #f5f7fa; box-shadow: 0 0 0 1px transparent inset; transition: all 0.3s; }
-.custom-input :deep(.el-input__wrapper:focus-within) { background-color: #ffffff; box-shadow: 0 0 0 1px #409EFF inset; }
-.right-avatar { display: flex; flex-direction: column; align-items: center; padding-right: 40px; }
-.avatar-label { align-self: flex-start; margin-bottom: 10px; font-size: 14px; color: #606266; }
-.avatar-uploader { border: 1px dashed #d9d9d9; border-radius: 50%; cursor: pointer; position: relative; overflow: hidden; width: 140px; height: 140px; transition: border-color 0.3s; }
-.avatar-uploader:hover { border-color: #409EFF; }
-.avatar-uploader-icon { font-size: 28px; color: #8c939d; width: 140px; height: 140px; text-align: center; line-height: 140px; }
-.avatar { width: 140px; height: 140px; display: block; object-fit: cover; }
-.upload-tip { margin-top: 15px; font-size: 12px; color: #909399; }
+.header {
+  margin-bottom: 20px;
+}
+.back-btn {
+  font-size: 16px;
+  color: var(--book-text-color); /* 适配全局文字颜色 */
+}
+.back-btn:hover {
+  color: var(--book-link-color); /* 适配全局高亮颜色 */
+}
+.card-header {
+  font-weight: bold;
+  font-size: 18px;
+}
+.form-layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 60px;
+  padding: 20px 0;
+}
+.left-form {
+  flex: 1;
+  max-width: 500px;
+}
+.save-btn {
+  width: 120px;
+}
+
+.custom-input :deep(.el-input__wrapper) {
+  background-color: var(--el-fill-color-light);
+  box-shadow: 0 0 0 1px transparent inset;
+  transition: all 0.3s;
+}
+.custom-input :deep(.el-input__wrapper:focus-within) {
+  background-color: var(--el-input-bg-color);
+  box-shadow: 0 0 0 1px var(--book-link-color) inset;
+}
+
+.right-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-right: 40px;
+}
+.avatar-label {
+  align-self: flex-start;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--book-text-color);
+}
+.avatar-uploader {
+  border: 1px dashed var(--book-border-color);
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  width: 140px;
+  height: 140px;
+  transition: border-color 0.3s;
+}
+.avatar-uploader:hover {
+  border-color: var(--book-link-color);
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: var(--book-hover-color);
+  width: 140px;
+  height: 140px;
+  text-align: center;
+  line-height: 140px;
+}
+.avatar {
+  width: 140px;
+  height: 140px;
+  display: block;
+  object-fit: cover;
+}
+.upload-tip {
+  margin-top: 15px;
+  font-size: 12px;
+  color: var(--book-hover-color);
+}
 </style>

@@ -1,5 +1,5 @@
 <script setup>
-import { House, Reading, Comment } from '@element-plus/icons-vue'
+import { House, Reading, Comment, Sunny, Moon } from '@element-plus/icons-vue' // 引入 Sunny 和 Moon
 import { ref, onMounted, onUnmounted } from "vue" // 引入了 onMounted 和 onUnmounted
 import { useRouter } from "vue-router"
 import MiniUser from "@/components/MiniUser.vue";
@@ -7,7 +7,18 @@ import MiniUser from "@/components/MiniUser.vue";
 const router = useRouter()
 const defaultIdx = ref('1')
 const isVisible = ref(true) // 控制显隐
+const isDark = ref(localStorage.getItem('theme') === 'dark')
 let lastScrollTop = 0
+
+const toggleTheme = (val) => {
+  if (val) {
+    document.documentElement.classList.add('dark')
+    localStorage.setItem('theme', 'dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+    localStorage.setItem('theme', 'light')
+  }
+}
 
 const handleScroll = () => {
   const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop
@@ -27,6 +38,10 @@ const handleScroll = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+
+  if (isDark.value) {
+    document.documentElement.classList.add('dark')
+  }
 })
 
 onUnmounted(() => {
@@ -60,9 +75,9 @@ function handleJmpPage(key) {
           @select="handleSelect"
           :default-active="defaultIdx"
           mode="horizontal"
-          background-color="#545c64"
-          text-color="#fff"
-          active-text-color="#ffd04b"
+          background-color="transparent"
+          text-color="var(--book-text-color)"
+          active-text-color="var(--book-link-color)"
           class="navigate-menu"
       >
         <el-menu-item index="1">
@@ -81,7 +96,16 @@ function handleJmpPage(key) {
     </el-col>
 
     <el-col :span="12" class="function-bar">
-      <div class="mini-message">这里是消息组件</div>
+      <div class="theme-switch-wrapper">
+        <el-switch
+            v-model="isDark"
+            inline-prompt
+            :active-icon="Moon"
+            :inactive-icon="Sunny"
+            @change="toggleTheme"
+            style="--el-switch-on-color: #4c4d4f; --el-switch-off-color: #e4e7ed"
+        />
+      </div>
       <MiniUser class="mini-user"></MiniUser>
     </el-col>
   </el-row>
@@ -96,7 +120,7 @@ function handleJmpPage(key) {
   width: 100%;
   transition: transform 0.3s ease-in-out; /*平移动画效果 */
 
-  background-color: #545c64;
+  background-color: var(--book-topbar-bg);
 }
 
 /* 当 isVisible 为 false 时激活这个 class */
@@ -115,15 +139,21 @@ function handleJmpPage(key) {
 }
 .navigate-menu {
   height: 100%;
+  /* 让鼠标悬浮时的文字颜色与激活时的链接色保持一致 */
+  --el-menu-hover-text-color: var(--book-link-color);
 }
 .function-bar {
   display: flex;
   flex-direction: row-reverse;
+  gap: 20px;
 }
-.mini-user {
 
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
 }
-.mini-message {
+
+.mini-user {
 
 }
 </style>

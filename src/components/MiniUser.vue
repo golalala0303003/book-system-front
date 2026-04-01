@@ -46,22 +46,22 @@ function goProfile() {
 
 <style scoped>
 .container {
-  border: 1px solid #ccc; /* 细灰边框 */
+  border: 3px solid var(--book-border-color); /* 细灰边框 */
 }
 .container:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* 背景微亮，可调 */
-  border-color: #ffd04b;                      /* 边框高亮，可选 */
+  background-color: var(--book-bg-color); /* 背景微亮，可调 */
+  border-color: var(--book-border-color);                      /* 边框高亮，可选 */
   cursor: pointer;                             /* 鼠标变手型 */
 }
 .login-prompt {
   cursor: default;
   font-size: 14px;
-  color: #fff;
+  color: var(--book-text-color);
   line-height: 60px;
 }
 
 .login-link {
-  color: #ffd04b;
+  color: var(--book-link-color);
   cursor: pointer;
   margin-left: 4px;
 }
@@ -91,11 +91,11 @@ function goProfile() {
 
 .user-name {
   font-size: 16px;
-  color: #fff;
+  color: var(--book-text-color);
 }
 
 .user-link {
   font-size: 16px;
-  color: #ffd04b;
+  color: var(--book-link-color);
 }
 </style>

@@ -1,0 +1,32 @@
+/* 白天模式 (Light Mode)默认 */
+:root {
+    --book-bg-universal-white: #ffffff; /*通用白色*/
+
+    /* 基础颜色 */
+    --book-bg-color: #f2f3f5; /*背景色*/
+    --book-text-color: #303133; /*文字颜色*/
+    --book-topbar-bg: #ffffff; /*topbar颜色*/
+    --book-border-color: #e4e7ed; /*边框颜色*/
+    --book-link-color: #409eff; /*链接和高亮通用颜色*/
+    --book-hover-color: #676767; /*悬浮颜色*/
+}
+
+/* 夜间模式 (Dark Mode) */
+html.dark {
+    /* 基础颜色 */
+    --book-bg-color: #141414;
+    --book-text-color: #E5EAF3;
+    --book-topbar-bg: #1d1e1f;
+    --book-border-color: #363637;
+    --book-link-color: #e6a23c;
+    --book-hover-color: #b8b8b8;
+}
+
+/* 将这些变量应用到全局基础标签上 */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--book-bg-color);
+    color: var(--book-text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
