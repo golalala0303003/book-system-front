@@ -1,14 +1,32 @@
 <script setup>
-import { House, Reading, Comment, Sunny, Moon } from '@element-plus/icons-vue' // 引入 Sunny 和 Moon
-import { ref, onMounted, onUnmounted } from "vue" // 引入了 onMounted 和 onUnmounted
-import { useRouter } from "vue-router"
-import MiniUser from "@/components/MiniUser.vue";
+import { House, Reading, Comment, Sunny, Moon } from '@element-plus/icons-vue'
+import { ref, onMounted, onUnmounted, computed } from "vue"
+import { useRoute, useRouter } from "vue-router"
+import MiniUser from "@/components/MiniUser.vue"
+import GlobalSearch from "@/components/GlobalSearch.vue" // 引入全局搜索组件
+import { useUserStore } from "@/stores/user" // 引入 userStore
 
+
+const route = useRoute() // 获取当前路由信息
 const router = useRouter()
-const defaultIdx = ref('1')
-const isVisible = ref(true) // 控制显隐
+const userStore = useUserStore() // 实例化
+const isVisible = ref(true)
 const isDark = ref(localStorage.getItem('theme') === 'dark')
 let lastScrollTop = 0
+
+function handleJmpAdmin() {
+  router.push('/admin')
+}
+
+// 修复 Bug：利用 computed 动态计算当前激活的菜单项
+const defaultIdx = computed(() => {
+  if (route.path.startsWith('/book')) {
+    return '2' // 只要路径以 /book 开头，高亮“图书百科”
+  } else if (route.path.startsWith('/forum')) {
+    return '3' // 高亮“图书交流论坛”
+  }
+  return '1' // 默认高亮“首页”
+})
 
 const toggleTheme = (val) => {
   if (val) {
@@ -23,12 +41,14 @@ const toggleTheme = (val) => {
 const handleScroll = () => {
   const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop
 
-  // 避免微小抖动触发
   if (Math.abs(currentScrollTop - lastScrollTop) < 10) return
 
-  // 判断方向,向下滚且距离超过 100px 隐藏，向上滚显示
   if (currentScrollTop > lastScrollTop && currentScrollTop > 150) {
     isVisible.value = false
+
+    if (document.activeElement && document.activeElement.blur) {
+      document.activeElement.blur()
+    }
   } else {
     isVisible.value = true
   }
@@ -49,19 +69,18 @@ onUnmounted(() => {
 })
 
 function handleSelect(key, keyPath) {
-  console.log(key, keyPath)
   handleJmpPage(key)
 }
 
 function handleJmpPage(key) {
   if (key === '1') {
-    console.log("跳转首页")
+    router.push({ name: 'index'})
   }
   else if (key === '2') {
-    console.log("跳转图书百科")
+    router.push({ name: 'bookHome'})
   }
   else if (key === '3') {
-    console.log("跳转图书交流论坛")
+    router.push({ name: 'forumHome'})
   }
 }
 </script>
@@ -70,7 +89,8 @@ function handleJmpPage(key) {
   <el-row :class="['topbar-wrapper', { 'is-hidden': !isVisible }]">
 
     <el-col :span="2" class="logo">这是一个logo</el-col>
-    <el-col :span="10" class="navigate-bar">
+
+    <el-col :span="8" class="navigate-bar">
       <el-menu
           @select="handleSelect"
           :default-active="defaultIdx"
@@ -95,7 +115,7 @@ function handleJmpPage(key) {
       </el-menu>
     </el-col>
 
-    <el-col :span="12" class="function-bar">
+    <el-col :span="14" class="function-bar">
       <div class="theme-switch-wrapper">
         <el-switch
             v-model="isDark"
@@ -106,8 +126,22 @@ function handleJmpPage(key) {
             style="--el-switch-on-color: #4c4d4f; --el-switch-off-color: #e4e7ed"
         />
       </div>
+
+      <el-button
+          v-if="userStore.isAdmin"
+          type="primary"
+          plain
+          size="small"
+          @click="handleJmpAdmin"
+      >
+        进入管理端
+      </el-button>
+
       <MiniUser class="mini-user"></MiniUser>
+
+      <GlobalSearch class="global-search"></GlobalSearch>
     </el-col>
+
   </el-row>
 </template>
 
@@ -118,42 +152,41 @@ function handleJmpPage(key) {
   z-index: 999;
   height: 7vh;
   width: 100%;
-  transition: transform 0.3s ease-in-out; /*平移动画效果 */
-
+  transition: transform 0.3s ease-in-out;
   background-color: var(--book-topbar-bg);
 }
 
-/* 当 isVisible 为 false 时激活这个 class */
 .is-hidden {
-  transform: translateY(-100%); /* 向上移动自身高度的距离，实现隐藏 */
+  transform: translateY(-100%);
 }
 
 .logo {
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--book-text-color);
+  font-weight: bold;
 }
+
 .el-menu--horizontal.el-menu {
   border-bottom: 0;
 }
-.navigate-bar {
 
-}
 .navigate-menu {
   height: 100%;
-  /* 让鼠标悬浮时的文字颜色与激活时的链接色保持一致 */
   --el-menu-hover-text-color: var(--book-link-color);
 }
+
 .function-bar {
   display: flex;
   flex-direction: row-reverse;
+  align-items: center; /* 确保搜索框、头像、开关在同一水平线上居中 */
   gap: 20px;
+  padding-right: 20px; /* 右侧留出一定边距，不贴边 */
 }
 
 .theme-switch-wrapper {
   display: flex;
   align-items: center;
-}
-
-.mini-user {
-
 }
 </style>

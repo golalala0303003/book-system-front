@@ -1,6 +1,6 @@
 /* 白天模式 (Light Mode)默认 */
 :root {
-    --book-bg-universal-white: #ffffff; /*通用白色*/
+    --book-bg-universal-white: #ffffff; /*通用白色 尽量不要使用*/
 
     /* 基础颜色 */
     --book-bg-color: #f2f3f5; /*背景色*/

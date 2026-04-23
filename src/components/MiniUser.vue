@@ -1,101 +1,188 @@
 <script setup>
-import { ref } from "vue";
-import {User} from '@element-plus/icons-vue'
-import {useRouter} from "vue-router";
-import {useUserStore} from "@/stores/user.js";
+import { User } from '@element-plus/icons-vue'
+import { useRouter } from "vue-router"
+import { useUserStore } from "@/stores/user.js"
+import { ElMessage, ElMessageBox } from 'element-plus'
 
-
-const router = useRouter();
-const userStore = useUserStore()
+// 如果你有默认头像图片，可以保留这里的 import
 import defaultAvatar from '@/assets/test-avatar.jpg'
 
-function goLogin() {
-  router.push({name: 'login'})
+const router = useRouter()
+const userStore = useUserStore()
+
+// 1. 跳转登录页
+const goLogin = () => {
+  router.push({ name: 'login' })
 }
 
-function goProfile() {
-  router.push({
-    name: 'profile',
-    params: {id: userStore.userInfo.id}
+// 2. 处理下拉菜单的点击事件
+const handleCommand = (command) => {
+  if (command === 'profile') {
+    router.push({ name: 'profile', params: { id: userStore.userInfo.id } })
+  } else if (command === 'settings') {
+    router.push({ name: 'profileEdit' })
+  } else if (command === 'logout') {
+    executeLogout()
+  }
+}
+
+// 3. 退出登录逻辑 (纯 JWT 模式：仅前端销毁)
+const executeLogout = () => {
+  ElMessageBox.confirm(
+      '确定要退出当前账号吗？',
+      '退出提示',
+      {
+        confirmButtonText: '确定退出',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  ).then(() => {
+    // 调用 Pinia 中的 logout 动作清理 Token 和用户信息
+    // 前提：确保你的 userStore.js 中写了 logout 方法（如 this.token = ''; this.userInfo = {};）
+    userStore.logout()
+
+    ElMessage.success('已安全退出')
+
+    // 退出后如果身处需要鉴权的页面（如个人主页），直接踢回首页
+    if (router.currentRoute.value.name === 'profile') {
+      router.push('/')
+    }
+  }).catch(() => {
+    // 取消退出，静默处理
   })
 }
-
 </script>
 
 <template>
-  <div class="container">
-    <!-- 未登录 -->
-    <div v-if="!userStore.isLogin" class="login-prompt">
-      <el-icon><User /></el-icon>
-      未登录，请先
-      <span class="login-link" @click="goLogin">[登录]</span>
-    </div>
+  <div class="mini-user-container">
 
-    <!-- 已登录 -->
-    <div v-else class="user-card" @click="goProfile">
-      <img :src="userStore.userInfo.avatar || defaultAvatar" alt="头像" class="avatar" />
-      <div class="user-info">
-        <div class="user-name">{{userStore.userInfo.username}}</div>
-        <div class="user-link">个人主页</div>
+    <div v-if="!userStore.isLogin" class="unlogged-box" @click="goLogin">
+      <el-avatar :size="40" :icon="User" class="default-avatar" />
+      <div class="unlogged-info">
+        <span class="welcome-text">欢迎来到社区</span>
+        <span class="login-link">点击登录/注册</span>
       </div>
     </div>
 
-  </div>
+    <el-dropdown v-else trigger="hover" @command="handleCommand" class="user-dropdown">
+      <div class="logged-box">
+        <el-avatar
+            :size="40"
+            shape="square"
+            :src="userStore.userInfo?.avatar || defaultAvatar"
+        />
+        <div class="user-info">
+          <div class="user-name">{{ userStore.userInfo?.username || '用户' }}</div>
+          <div class="user-role">{{ userStore.userInfo?.role === 'admin' ? '管理员' : '普通用户' }}</div>
+        </div>
+      </div>
 
+      <template #dropdown>
+        <el-dropdown-menu class="custom-dropdown-menu">
+          <el-dropdown-item command="profile">个人主页</el-dropdown-item>
+          <el-dropdown-item command="settings">修改资料</el-dropdown-item>
+          <el-dropdown-item command="logout" divided class="logout-item">退出登录</el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
+  </div>
 </template>
 
 <style scoped>
-.container {
-  border: 3px solid var(--book-border-color); /* 细灰边框 */
+.mini-user-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
-.container:hover {
-  background-color: var(--book-bg-color); /* 背景微亮，可调 */
-  border-color: var(--book-border-color);                      /* 边框高亮，可选 */
-  cursor: pointer;                             /* 鼠标变手型 */
+
+/* --- 未登录样式 --- */
+.unlogged-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
-.login-prompt {
-  cursor: default;
-  font-size: 14px;
+
+.unlogged-box:hover {
+  background-color: var(--book-hover-color, rgba(0, 0, 0, 0.05));
+}
+
+.default-avatar {
+  background-color: var(--book-border-color);
+  color: #fff;
+}
+
+.unlogged-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.welcome-text {
+  font-size: 13px;
   color: var(--book-text-color);
-  line-height: 60px;
 }
 
 .login-link {
+  font-size: 14px;
+  font-weight: bold;
   color: var(--book-link-color);
-  cursor: pointer;
-  margin-left: 4px;
 }
 
-/* 已登录用户卡片 */
-.user-card {
+/* --- 已登录样式 --- */
+.user-dropdown {
+  height: 100%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 100%;
-  margin-left: 3px;
-  margin-right: 3px;
 }
 
-.user-card .avatar {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 4px; /* 方形 */
+.logged-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  outline: none; /* 消除 el-dropdown 自带的点击边框 */
+}
+
+.logged-box:hover {
+  background-color: var(--book-hover-color, rgba(0, 0, 0, 0.05));
 }
 
 .user-info {
   display: flex;
   flex-direction: column;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
 .user-name {
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 500;
   color: var(--book-text-color);
 }
 
-.user-link {
-  font-size: 16px;
-  color: var(--book-link-color);
+.user-role {
+  font-size: 12px;
+  color: var(--book-text-color);
+}
+
+/* --- 下拉菜单样式定制 --- */
+.custom-dropdown-menu {
+  min-width: 120px;
+}
+
+/* 退出登录按钮标红警示 */
+.logout-item {
+  color: #f56c6c !important;
+}
+.logout-item:hover {
+  background-color: rgba(245, 108, 108, 0.1) !important;
+  color: #f56c6c !important;
 }
 </style>

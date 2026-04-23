@@ -23,6 +23,5 @@ const router = useRouter()
 
 .body {
   flex: 1;
-  min-height: 200vh;
 }
 </style>

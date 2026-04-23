@@ -1,12 +1,12 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'
-import request from '@/utils/request'
+import { useUserStore } from '@/stores/user.js'
+import request from '@/utils/request.js'
 
-import UserCard from '@/components/UserCard.vue'
+import UserCard from '@/components/user/UserCard.vue'
 import HistoryList from '@/components/HistoryList.vue'
-import UserStats from '@/components/UserStats.vue'
+import UserStats from '@/components/user/UserStats.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -58,11 +58,12 @@ watch(() => route.params.id, (newId) => {
           &lt; 返回首页
         </el-button>
         <UserCard :user-info="userInfo" :is-self="isSelf" class="mb-20" />
-        <HistoryList />
+
+        <HistoryList :user-id="route.params.id" :is-self="isSelf" />
       </el-col>
 
       <el-col :span="8">
-        <UserStats />
+        <UserStats :user-id="route.params.id" />
       </el-col>
 
     </el-row>

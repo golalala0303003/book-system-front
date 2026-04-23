@@ -1,10 +1,10 @@
 <script setup>
 import { reactive, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/user.js'
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-import request from '@/utils/request'
+import request from '@/utils/request.js'
 
 const router = useRouter()
 const userStore = useUserStore()
